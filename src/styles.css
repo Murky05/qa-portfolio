@@ -260,22 +260,24 @@ a:hover {
 }
 
 .reveal {
-  opacity: 0;
-  transform: translateY(14px);
-  animation: rise 700ms ease forwards;
+  animation: rise 700ms ease both;
 }
 
 .delay-1 {
-  animation-delay: 120ms;
+  animation-delay: 90ms;
 }
 .delay-2 {
-  animation-delay: 240ms;
+  animation-delay: 160ms;
 }
 .delay-3 {
-  animation-delay: 360ms;
+  animation-delay: 230ms;
 }
 
 @keyframes rise {
+  from {
+    opacity: 0.35;
+    transform: translateY(10px);
+  }
   to {
     opacity: 1;
     transform: translateY(0);
