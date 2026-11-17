@@ -1,0 +1,6 @@
+As a registered customer, I want to log in with my username and password so that I can access my account and shop.
+Acceptance criteria:
+- Valid credentials open the products page
+- Invalid credentials show an error message
+- Locked-out users cannot log in
+- Username and password are both required

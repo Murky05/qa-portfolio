@@ -1,0 +1,56 @@
+{
+  "source": "mock",
+  "model": "local-heuristic",
+  "story": "As a registered customer, I want to log in with my username and password so that I can access my account and shop.\nAcceptance criteria:\n- Valid credentials open the products page\n- Invalid credentials show an error message\n- Locked-out users cannot log in\n- Username and password are both required",
+  "cases": [
+    {
+      "id": "TC-01",
+      "title": "Valid credentials open the products page",
+      "priority": "High",
+      "type": "positive",
+      "preconditions": "User has a registered account and is on the login page",
+      "steps": [
+        "Enter a valid username",
+        "Enter a valid password",
+        "Click the Login button"
+      ],
+      "expectedResult": "User is redirected to the products page"
+    },
+    {
+      "id": "TC-02",
+      "title": "Invalid credentials show an error message",
+      "priority": "High",
+      "type": "negative",
+      "preconditions": "User is on the login page",
+      "steps": [
+        "Enter an invalid username or password",
+        "Click the Login button"
+      ],
+      "expectedResult": "An error message is shown and the user stays on login"
+    },
+    {
+      "id": "TC-03",
+      "title": "Locked-out users cannot log in",
+      "priority": "High",
+      "type": "negative",
+      "preconditions": "Account is locked out",
+      "steps": [
+        "Enter locked-out username and valid password",
+        "Click the Login button"
+      ],
+      "expectedResult": "A locked-out error is shown and access is denied"
+    },
+    {
+      "id": "TC-04",
+      "title": "Username and password are both required",
+      "priority": "Medium",
+      "type": "edge",
+      "preconditions": "User is on the login page",
+      "steps": [
+        "Leave username and/or password empty",
+        "Click the Login button"
+      ],
+      "expectedResult": "Validation error indicates the missing required field"
+    }
+  ]
+}

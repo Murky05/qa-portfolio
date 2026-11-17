@@ -1,0 +1,26 @@
+[
+  {
+    "id": "NEG-01",
+    "username": "",
+    "password": "",
+    "expectedError": "Username is required"
+  },
+  {
+    "id": "NEG-02",
+    "username": "standard_user",
+    "password": "",
+    "expectedError": "Password is required"
+  },
+  {
+    "id": "NEG-03",
+    "username": "wrong_user",
+    "password": "wrong_pass",
+    "expectedError": "Username and password do not match"
+  },
+  {
+    "id": "NEG-04",
+    "username": "locked_out_user",
+    "password": "secret_sauce",
+    "expectedError": "Sorry, this user has been locked out"
+  }
+]
