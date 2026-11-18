@@ -47,6 +47,17 @@ npm run test:headed   # watch browsers
 npm run report        # open HTML report after a run
 ```
 
+### Manual login on SauceDemo
+
+If you try the site yourself at https://www.saucedemo.com:
+
+| Goal | Username | Password |
+| --- | --- | --- |
+| Successful login | `standard_user` | `secret_sauce` |
+| Locked-out error (expected) | `locked_out_user` | `secret_sauce` |
+
+Password is **case-sensitive** and must be exactly `secret_sauce` (lowercase, no spaces). A typo like `Secret_sauce` shows *“Username and password do not match”* even for a listed username. `locked_out_user` with the correct password still cannot sign in — that is intentional demo behavior (*“Sorry, this user has been locked out”*).
+
 ### Typecheck / production build
 
 ```bash
