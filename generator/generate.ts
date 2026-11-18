@@ -1,7 +1,7 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 
-type TestCase = {
+export type TestCase = {
   id: string;
   title: string;
   priority: "Critical" | "High" | "Medium" | "Low";
@@ -11,7 +11,7 @@ type TestCase = {
   expectedResult: string;
 };
 
-type GeneratorResult = {
+export type GeneratorResult = {
   source: "openai" | "mock";
   model: string;
   story: string;
@@ -24,7 +24,7 @@ const JSON_OUT = path.join(ROOT, "test-cases.json");
 const CSV_OUT = path.join(ROOT, "test-cases.csv");
 const PUBLIC_OUT = path.join(ROOT, "public", "sample-test-cases.json");
 
-function mockCases(story: string): TestCase[] {
+export function mockCases(story: string): TestCase[] {
   const lower = story.toLowerCase();
   const cases: TestCase[] = [];
 
@@ -151,7 +151,7 @@ ${story}`;
   return parsed;
 }
 
-function toCsv(cases: TestCase[]): string {
+export function toCsv(cases: TestCase[]): string {
   const escape = (value: string) => `"${value.replace(/"/g, '""')}"`;
   const header = ["id", "title", "priority", "type", "preconditions", "steps", "expectedResult"];
   const rows = cases.map((c) =>
@@ -209,7 +209,16 @@ async function main() {
   console.log("Review every generated case before using it in a release.");
 }
 
-main().catch((error) => {
-  console.error(error instanceof Error ? error.message : error);
-  process.exit(1);
-});
+function isDirectlyInvoked(): boolean {
+  const entry = process.argv[1];
+  if (!entry) return false;
+  const base = path.basename(entry);
+  return base === "generate.ts" || base === "generate.js";
+}
+
+if (isDirectlyInvoked()) {
+  main().catch((error) => {
+    console.error(error instanceof Error ? error.message : error);
+    process.exit(1);
+  });
+}
