@@ -141,7 +141,11 @@ ${story}`;
   const data = (await response.json()) as {
     choices?: Array<{ message?: { content?: string } }>;
   };
-  const content = data.choices?.[0]?.message?.content?.trim();
+  return parseModelResponse(data.choices?.[0]?.message?.content);
+}
+
+export function parseModelResponse(rawContent: string | undefined | null): TestCase[] {
+  const content = rawContent?.trim();
   if (!content) throw new Error("Empty model response");
 
   const parsed = JSON.parse(content.replace(/^```json\s*|\s*```$/g, "")) as TestCase[];

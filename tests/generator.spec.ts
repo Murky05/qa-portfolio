@@ -1,5 +1,10 @@
 import { test, expect } from "@playwright/test";
-import { mockCases, toCsv, type TestCase } from "../generator/generate";
+import {
+  mockCases,
+  parseModelResponse,
+  toCsv,
+  type TestCase,
+} from "../generator/generate";
 
 const PRIORITIES = ["Critical", "High", "Medium", "Low"];
 const TYPES = ["positive", "negative", "edge"];
@@ -120,5 +125,60 @@ test.describe("toCsv", () => {
     ];
     const row = toCsv(cases).split("\n")[1];
     expect(row).toContain('"First | Second | Third"');
+  });
+});
+
+test.describe("parseModelResponse", () => {
+  const oneCase: TestCase[] = [
+    {
+      id: "TC-01",
+      title: "Valid credentials open the products page",
+      priority: "High",
+      type: "positive",
+      preconditions: "User is on the login page",
+      steps: ["Enter username", "Enter password", "Submit"],
+      expectedResult: "User reaches the products page",
+    },
+  ];
+
+  test("parses a bare JSON array of cases", () => {
+    const parsed = parseModelResponse(JSON.stringify(oneCase));
+    expect(parsed).toEqual(oneCase);
+  });
+
+  test("strips a ```json fenced code block before parsing", () => {
+    const fenced = "```json\n" + JSON.stringify(oneCase) + "\n```";
+    expect(parseModelResponse(fenced)).toEqual(oneCase);
+  });
+
+  test("trims surrounding whitespace around a fenced block", () => {
+    const fenced = "  ```json\n" + JSON.stringify(oneCase) + "\n```  ";
+    expect(parseModelResponse(fenced)).toEqual(oneCase);
+  });
+
+  test("throws on empty, whitespace-only, null, or undefined content", () => {
+    expect(() => parseModelResponse("")).toThrow("Empty model response");
+    expect(() => parseModelResponse("   \n  ")).toThrow("Empty model response");
+    expect(() => parseModelResponse(null)).toThrow("Empty model response");
+    expect(() => parseModelResponse(undefined)).toThrow("Empty model response");
+  });
+
+  test("rejects valid JSON that is not an array", () => {
+    expect(() => parseModelResponse('{"id":"TC-01"}')).toThrow(
+      "Model did not return a test-case array",
+    );
+  });
+
+  test("rejects an empty array", () => {
+    expect(() => parseModelResponse("[]")).toThrow(
+      "Model did not return a test-case array",
+    );
+  });
+
+  test("propagates a parse error on malformed JSON", () => {
+    // Fence stripping cannot rescue invalid JSON; the caller treats this as a
+    // failed generation and falls back to mock cases.
+    expect(() => parseModelResponse("not json at all")).toThrow();
+    expect(() => parseModelResponse("```json\n[{ bad }]\n```")).toThrow();
   });
 });
